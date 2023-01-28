@@ -48,7 +48,10 @@ contract("Dex",accounts =>{
         await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 1, 100)
         await dex.createLimitOrder(0, web3.utils.fromUtf8("LINK"), 1, 200)
 
+        //getting the buy orderbook and filling it up
         let orderbook = await dex.getOrderBook(web3.utils.fromUtf8("LINK"), 0);
+
+        assert(orderbook.length >0); //to make sure the order book has at least 1 order, else fail
         for(let i = 0; i < orderbook.length - 1; i++){
             assert(orderbook[i].price >= orderbook[i+1].price, "not right order in buy book")
         }
@@ -66,8 +69,10 @@ contract("Dex",accounts =>{
                 await dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 1, 300)
                 await dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 1, 100)
                 await dex.createLimitOrder(1, web3.utils.fromUtf8("LINK"), 1, 200)
-        
+
+                //getting the sell orderbook and filling it
                 let orderbook = await dex.getOrderBook(web3.utils.fromUtf8("LINK"), 1);
+                assert(orderbook.length > 0); //making sure there's at least 1 item in orderbook
                 for(let i = 0; i < orderbook.length - 1; i++){
                     assert(orderbook[i].price <= orderbook[i+1].price, "not right order in sell book")
                 }
