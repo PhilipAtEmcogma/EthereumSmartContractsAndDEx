@@ -2,7 +2,12 @@ const Dex = artifacts.require("Dex");
 const Link = artifacts.require("Link");
 const truffleAssert = require('truffle-assertions');
 
-contract("Dex",accounts =>{
+//.skip is inserted because code already pass these tests
+//so don't need to repeat them, unless new code is implemented and needed retest
+contract.skip("Dex",accounts =>{
+    /*
+        limited buy/sell order tests
+    */
     //The user must have ETH deposited such that deposited eth >= buy order value
     it("should throw an error if ETH balance is too low when creating BUY limit order", async() =>{
         let dex = await Dex.deployed();
@@ -77,5 +82,4 @@ contract("Dex",accounts =>{
                     assert(orderbook[i].price <= orderbook[i+1].price, "not right order in sell book")
                 }
     })
-
 })

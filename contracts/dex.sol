@@ -25,8 +25,7 @@ contract Dex is Wallet{
 
     uint public nexOrderId = 0; //increment by whenever a order comes in regardless of if its buy/sell
 
-    //1 order book for buy, 1 order book for sell.  use mapping to store
-    //the 1st mapping points to asset, 2nd mapping points to the action taken and in order book
+    //double mapping, the 1st mapping points to asset, 2nd mapping points to the action taken and in order book
     mapping(bytes32 => mapping(uint => Order[])) public orderBook;
 
     function getOrderBook(bytes32 ticker, Side side) view public returns(Order[] memory){
@@ -57,6 +56,7 @@ contract Dex is Wallet{
 
         //for BUY limit order the smallest offer is at the end of the orderbook
         //then proceed to the largest offer at the start of the orderbook
+        //largest buy offer is filled first
         if(side == Side.BUY){
             //continue until we reach the 1st item in the orderbook
             while(i > 0){
@@ -74,6 +74,7 @@ contract Dex is Wallet{
         }
         //for SELL limit order the smallest offer is at the start of the orderbook
         //then proceed to the largest offer at the end of the orderbook
+        //smallest sell offer filled first
         else if(side == Side.SELL){
             while(i > 0){
                 if(orders[i - 1].price < orders[i].price) {
@@ -87,5 +88,9 @@ contract Dex is Wallet{
         }
 
         nexOrderId++;
+    }
+
+    function createMarketOrder(Side side, bytes32 ticker, uint amount) public{
+        
     }
 }
